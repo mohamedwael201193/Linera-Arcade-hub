@@ -1,0 +1,39 @@
+# Linera Arcade Hub - Smart Contracts Workspace
+# This workspace contains all Linera applications for the Arcade Hub
+
+[workspace]
+resolver = "2"
+members = [
+    "player_profile",
+    "game_of_life",
+    "prediction_pulse",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+# Linera SDK - disable default features for smaller WASM
+linera-sdk = { version = "0.15", default-features = false }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+bcs = "0.1"
+
+# GraphQL - minimal features only for smaller WASM
+async-graphql = { version = "7.0", default-features = false }
+
+# Async traits
+async-trait = "0.1"
+thiserror = "1.0"
+
+# Aggressive size optimization for WASM deployment to Conway
+[profile.release]
+opt-level = "z"          # Optimize aggressively for size
+lto = true               # Link-time optimization
+codegen-units = 1        # Single codegen unit for better optimization
+panic = "abort"          # Smaller panic handling (no unwinding)
+debug = false            # No debug info
+strip = "symbols"        # Strip all symbols

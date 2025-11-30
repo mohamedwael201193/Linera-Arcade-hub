@@ -1,0 +1,21 @@
+[package]
+name = "prediction_pulse"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+linera-sdk.workspace = true
+serde.workspace = true
+async-graphql.workspace = true
+
+[dev-dependencies]
+linera-sdk = { workspace = true, features = ["test"] }
+
+[[bin]]
+name = "prediction_pulse_contract"
+path = "src/contract.rs"
+
+[[bin]]
+name = "prediction_pulse_service"
+path = "src/service.rs"

@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+/* Custom theme using Tailwind v4 CSS variables - Dark Theme with Orange Accent */
+@theme {
+  /* Colors - Dark Theme */
+  --color-background: #0a0f1a;
+  --color-background-dark: #060a12;
+  --color-background-light: #111827;
+  --color-card: #111827;
+  --color-card-hover: #1a2332;
+  --color-border: #1f2937;
+  --color-border-light: #374151;
+
+  /* Primary accent - Orange/Amber */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #f97316;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+
+  /* Secondary - Purple/Blue glow */
+  --color-secondary-400: #a78bfa;
+  --color-secondary-500: #8b5cf6;
+  --color-secondary-600: #7c3aed;
+
+  /* Text colors */
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #9ca3af;
+  --color-text-muted: #6b7280;
+
+  /* Success, Warning, Error */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Glow effects */
+  --color-glow-orange: rgba(249, 115, 22, 0.4);
+  --color-glow-purple: rgba(139, 92, 246, 0.3);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+  --shadow-glow: 0 0 40px rgba(249, 115, 22, 0.15);
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+  }
+
+  to {
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.4);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-text-primary font-sans antialiased;
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #0a0f1a 100%);
+}
+
+/* Custom utility classes */
+.card {
+  @apply bg-card rounded-xl border border-border;
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.7) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply border-primary-500/50;
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  @apply bg-primary-500 text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200;
+  @apply hover:bg-primary-600 active:scale-[0.98];
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+}
+
+.btn-secondary {
+  @apply bg-transparent text-text-primary font-medium px-6 py-2.5 rounded-lg border border-border transition-all duration-200;
+  @apply hover:bg-card-hover hover:border-text-muted active:scale-[0.98];
+}
+
+.btn-ghost {
+  @apply text-text-secondary font-medium px-4 py-2 rounded-lg transition-all duration-200;
+  @apply hover:bg-card hover:text-text-primary;
+}
+
+.input {
+  @apply w-full px-4 py-3 rounded-lg border border-border bg-background-dark text-text-primary;
+  @apply placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500;
+  @apply transition-all duration-200;
+}
+
+.badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-primary {
+  @apply bg-primary-500/20 text-primary-400 border border-primary-500/30;
+}
+
+.badge-success {
+  @apply bg-success/20 text-success border border-success/30;
+}
+
+.badge-warning {
+  @apply bg-warning/20 text-warning border border-warning/30;
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects */
+.glow-orange {
+  box-shadow: 0 0 40px rgba(249, 115, 22, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+}
+
+/* Icon styling */
+.icon-glow {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-muted;
+}
+
+/* Code and monospace */
+code {
+  @apply font-mono text-sm bg-background-dark px-2 py-1 rounded border border-border;
+}
+
+/* Link styles */
+a {
+  @apply text-primary-400 hover:text-primary-300 transition-colors;
+}

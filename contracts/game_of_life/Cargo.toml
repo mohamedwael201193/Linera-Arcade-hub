@@ -1,0 +1,23 @@
+[package]
+name = "game_of_life"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+linera-sdk.workspace = true
+serde.workspace = true
+async-graphql.workspace = true
+thiserror.workspace = true
+bcs.workspace = true
+
+[dev-dependencies]
+linera-sdk = { workspace = true, features = ["test"] }
+
+[[bin]]
+name = "game_of_life_contract"
+path = "src/contract.rs"
+
+[[bin]]
+name = "game_of_life_service"
+path = "src/service.rs"

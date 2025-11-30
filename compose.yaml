@@ -1,0 +1,20 @@
+# Linera Arcade Hub - Docker Compose Configuration
+# 
+# Usage:
+#   docker compose up --force-recreate
+#   Open http://localhost:5173
+
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"   # Web app (Vite frontend)
+      - "8080:8080"   # Linera faucet
+      - "9001:9001"   # Validator shard proxy
+      - "13001:13001" # Validator shard
+    volumes:
+      - .:/build
+    environment:
+      - LINERA_FAUCET_URL=http://localhost:8080
+    stdin_open: true
+    tty: true
