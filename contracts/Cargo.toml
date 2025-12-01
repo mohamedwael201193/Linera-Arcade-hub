@@ -7,6 +7,8 @@ members = [
     "player_profile",
     "game_of_life",
     "prediction_pulse",
+    "meme_auction",
+    "typing_arena",
 ]
 
 [workspace.package]

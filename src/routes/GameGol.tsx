@@ -581,8 +581,11 @@ export function GameGol() {
                 Or "Play" for auto-step mode
               </li>
             </ul>
-            <p className="text-xs text-text-muted mt-4 p-2 bg-background-dark rounded">
-              ⚡ Each action is stored on-chain and requires a MetaMask signature
+            <p className="text-xs text-text-muted mt-4 p-2 bg-background-dark rounded flex items-center gap-1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-yellow-400">
+                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10" />
+              </svg>
+              Each action is stored on-chain and requires a MetaMask signature
             </p>
           </div>
 

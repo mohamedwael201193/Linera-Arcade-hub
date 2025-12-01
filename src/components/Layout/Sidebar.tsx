@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
+import { GamepadIcon } from '../Icons'
 
 const navItems = [
   { path: '/', label: 'Home', icon: HomeIcon },
@@ -10,6 +11,8 @@ const navItems = [
 const gameShortcuts = [
   { path: '/games/gol', label: 'Game of Life', icon: GridIcon },
   { path: '/games/prediction-pulse', label: 'Prediction Pulse', icon: ChartIcon },
+  { path: '/games/meme-auction', label: 'Meme Auction', icon: AuctionIcon },
+  { path: '/games/typing-arena', label: 'Typing Arena', icon: KeyboardIcon },
 ]
 
 export function Sidebar() {
@@ -22,9 +25,13 @@ export function Sidebar() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center glow-orange">
-            <span className="text-white text-xl">🎮</span>
-          </div>
+          <motion.div
+            className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center glow-orange"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <GamepadIcon className="text-white" size={24} />
+          </motion.div>
           <div>
             <h1 className="font-bold text-lg text-gradient">Linera Arcade</h1>
             <span className="text-xs text-text-muted">Conway Testnet</span>
@@ -140,6 +147,23 @@ function ChartIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
+  )
+}
+
+function AuctionIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
+    </svg>
+  )
+}
+
+function KeyboardIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5A2.25 2.25 0 015.25 5.25h13.5A2.25 2.25 0 0121 7.5v9a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 16.5v-9zM8 10h.01M12 10h.01M16 10h.01M8 14h8" />
     </svg>
   )
 }

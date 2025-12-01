@@ -1,0 +1,21 @@
+[package]
+name = "meme_auction"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+linera-sdk.workspace = true
+serde.workspace = true
+async-graphql.workspace = true
+
+[dev-dependencies]
+linera-sdk = { workspace = true, features = ["test"] }
+
+[[bin]]
+name = "meme_auction_contract"
+path = "src/contract.rs"
+
+[[bin]]
+name = "meme_auction_service"
+path = "src/service.rs"

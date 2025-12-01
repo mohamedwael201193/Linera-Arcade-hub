@@ -11,7 +11,7 @@
 
 **🏆 A fully on-chain gaming platform built on Linera blockchain**
 
-[�� Live Demo](https://linera-arcade-hub.vercel.app) • [📖 Documentation](#-documentation) • [🚀 Quick Start](#-quick-start)
+[🎬 Live Demo](https://linera-arcade-hub.vercel.app) • [📖 Documentation](#-documentation) • [🚀 Quick Start](#-quick-start)
 
 </div>
 
@@ -19,75 +19,176 @@
 
 ## ✨ Features
 
+### 🎮 5 Fully On-Chain Games
+
 | Game | Description | Status |
 |------|-------------|--------|
 | 🎯 **Prediction Pulse** | On-chain betting/prediction market | ✅ **Fully Working** |
 | 🧬 **Game of Life** | Conway's cellular automaton on blockchain | ✅ **Fully Working** |
 | 👤 **Player Profile** | On-chain identity & stats tracking | ✅ **Fully Working** |
+| 🖼️ **Meme Auction** | NFT-style meme auctions with AI image generation | ✅ **Fully Working** |
+| ⌨️ **Typing Arena** | Speed typing challenges with WPM tracking | ✅ **Fully Working** |
 
-### 🔥 All Operations Are Real On-Chain Transactions
+### 🔥 Key Features
 
-- Every action requires MetaMask signature
-- State persists on Linera Conway Testnet
-- No mock data - 100% blockchain-powered
-
----
-
-## 🎬 Verified On-Chain Results
-
-### ✅ Prediction Pulse - Create Round & Place Bet
-\`\`\`
-[PredictionPulse] Creating round: {title: "Will BTC hit 100k?", optionA: "Yes", optionB: "No"}
-[MetaMask] Requesting signature for owner: 0xe1641a049381149afaacef386ee58fda5ad9be32
-[MetaMask] Signature obtained successfully ✅
-[PredictionPulse] Raw query result: {poolA: "10.", poolB: "0.", bettorsA: 1, status: "OPEN"}
-\`\`\`
-
-### ✅ Game of Life - Randomize Grid (516 cells on-chain)
-\`\`\`
-[GoL] Randomizing grid with seed: 88686
-[MetaMask] Signature obtained successfully ✅
-[GoL] Grid info: {generation: 0, running: false, liveCount: 516, width: 32, height: 32}
-\`\`\`
-
-### ✅ Game of Life - Step Simulation
-\`\`\`
-[GoL] Stepping simulation: {count: 1}
-[MetaMask] Signature obtained successfully ✅
-[GoL] Grid info: {generation: 6, liveCount: 294}
-\`\`\`
-
-### ✅ Game of Life - Load Pattern
-\`\`\`
-[GoL] Loading pattern: {pattern: 'BLOCK', x: 5, y: 5}
-[MetaMask] Signature obtained successfully ✅
-[GoL] Live cells: [{x:5,y:5}, {x:6,y:5}, {x:5,y:6}, {x:6,y:6}]
-\`\`\`
+- **🤖 AI Image Generation** - Create meme images using Pollinations AI
+- **🎨 40+ Professional SVG Icons** - No emojis, pure professional design
+- **💰 100 LINERA Token Bonus** - New users get tokens on first connect
+- **📊 Real Profile Stats** - Aggregated stats from all games
+- **🦊 MetaMask Integration** - Every action requires wallet signature
+- **⛓️ 100% On-Chain** - No mock data, all blockchain-powered
 
 ---
 
 ## 🏗️ Architecture
 
-\`\`\`
-┌─────────────────────────────────────────────────────────────┐
-│                    FRONTEND (React + Vite)                   │
-├─────────────────────────────────────────────────────────────┤
-│  WalletContext  │  PredictionPulse  │  GameOfLife  │ Profile │
-└────────┬────────┴────────┬──────────┴──────┬───────┴────┬────┘
-         │                 │                 │            │
-         ▼                 ▼                 ▼            ▼
-┌─────────────────────────────────────────────────────────────┐
-│              @linera/client (WASM) + MetaMaskSigner          │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  LINERA CONWAY TESTNET                       │
-├─────────────────┬─────────────────┬─────────────────────────┤
-│  PlayerProfile  │   GameOfLife    │    PredictionPulse      │
-│    Contract     │    Contract     │       Contract          │
-└─────────────────┴─────────────────┴─────────────────────────┘
-\`\`\`
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        FRONTEND (React + Vite + TypeScript)              │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
+│   │   Profile    │  │ Prediction   │  │  Game of     │  │    Meme     │ │
+│   │    Page      │  │   Pulse      │  │    Life      │  │   Auction   │ │
+│   └──────────────┘  └──────────────┘  └──────────────┘  └─────────────┘ │
+│                                                                          │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
+│   │   Typing     │  │   Icons      │  │     AI       │                  │
+│   │    Arena     │  │  (40+ SVG)   │  │  Generator   │                  │
+│   └──────────────┘  └──────────────┘  └──────────────┘                  │
+│                                                                          │
+└───────────────────────────────┬─────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                 @linera/client (WASM) + MetaMaskSigner                   │
+│                                                                          │
+│   • Wallet management       • Transaction signing                        │
+│   • GraphQL queries         • Chain synchronization                      │
+└───────────────────────────────┬─────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      LINERA CONWAY TESTNET                               │
+├─────────────┬─────────────┬───────────────┬──────────────┬──────────────┤
+│             │             │               │              │              │
+│  Player     │  Game of    │  Prediction   │    Meme      │   Typing     │
+│  Profile    │   Life      │    Pulse      │   Auction    │    Arena     │
+│             │             │               │              │              │
+│ ┌─────────┐ │ ┌─────────┐ │ ┌───────────┐ │ ┌──────────┐ │ ┌──────────┐ │
+│ │register │ │ │ toggle  │ │ │createRound│ │ │createAuc │ │ │createChal│ │
+│ │getStats │ │ │ step    │ │ │ placeBet  │ │ │ placeBid │ │ │submitRes │ │
+│ │updateXP │ │ │randomize│ │ │ resolve   │ │ │ claimMeme│ │ │claimPrize│ │
+│ └─────────┘ │ └─────────┘ │ └───────────┘ │ └──────────┘ │ └──────────┘ │
+│             │             │               │              │              │
+└─────────────┴─────────────┴───────────────┴──────────────┴──────────────┘
+```
+
+---
+
+## 🎬 Verified On-Chain Results
+
+### ✅ Meme Auction - Create Auction with AI Image
+
+```
+[AI] Starting generation for: cat with hat
+[Pollinations] Fetching: https://image.pollinations.ai/prompt/cat%20with%20hat...
+[Pollinations] Success! Size: 156234
+
+[MemeAuction] Creating auction: {
+  title: 'Cool Cat',
+  imageUrl: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...',
+  rarity: 'RARE',
+  startingPrice: '5.'
+}
+[MetaMask] Requesting signature for owner: 0xe1641a04...
+[MetaMask] Signature obtained successfully ✅
+[MemeAuction] Create auction result: {data: {createAuction: null}}
+```
+
+### ✅ Meme Auction - Place Bid
+
+```
+[MemeAuction] Placing bid: {auctionId: 1, amount: '10.'}
+[MetaMask] Requesting signature for owner: 0xe1641a04...
+[MetaMask] Signature obtained successfully ✅
+[MemeAuction] Place bid result: {data: {placeBid: null}}
+```
+
+### ✅ Meme Auction - Query Auctions from Chain
+
+```
+[MemeAuction] Querying auctions from app: b6da523079f466472686cc67c4c994467d4a40bb82c25ee2fd208ff1b99ffdc7
+[MemeAuction] Raw query result: {
+  "data": {
+    "auctions": [
+      {
+        "id": 1,
+        "title": "Cool Cat",
+        "imageUrl": "data:image/jpeg;base64,...",
+        "rarity": "RARE",
+        "currentBid": "10.",
+        "bidCount": 1,
+        "status": "OPEN"
+      }
+    ]
+  }
+}
+```
+
+### ✅ Typing Arena - Create Challenge
+
+```
+[TypingArena] Creating challenge: {
+  text: 'The quick brown fox jumps over the lazy dog',
+  difficulty: 'MEDIUM',
+  entryFee: '5.'
+}
+[MetaMask] Requesting signature for owner: 0xe1641a04...
+[MetaMask] Signature obtained successfully ✅
+[TypingArena] Create challenge result: {data: {createChallenge: null}}
+```
+
+### ✅ Typing Arena - Submit Result
+
+```
+[TypingArena] Submitting result: {
+  challengeId: 1,
+  wpm: 85,
+  accuracy: 97,
+  timeTaken: 45
+}
+[MetaMask] Signature obtained successfully ✅
+[TypingArena] Submit result: {data: {submitResult: null}}
+[TypingArena] Stats updated - Best WPM: 85
+```
+
+### ✅ Profile - Real Stats from All Games
+
+```
+[Profile] Loading stats for chain: 521da09bee...
+[Profile] Meme Auction stats: {auctionsCreated: 3, auctionsWon: 0, totalBids: 5}
+[Profile] Typing Arena stats: {challengesCompleted: 2, bestWpm: 85, avgAccuracy: 96}
+[Profile] Prediction Pulse stats: {roundsPlayed: 4, roundsWon: 1, totalWagered: 50}
+[Profile] Total XP calculated: 225
+[Profile] Games Played: 9
+```
+
+### ✅ Game of Life - Randomize Grid (516 cells on-chain)
+
+```
+[GoL] Randomizing grid with seed: 88686
+[MetaMask] Signature obtained successfully ✅
+[GoL] Grid info: {generation: 0, running: false, liveCount: 516, width: 32, height: 32}
+```
+
+### ✅ Prediction Pulse - Create Round & Place Bet
+
+```
+[PredictionPulse] Creating round: {title: "Will BTC hit 100k?", optionA: "Yes", optionB: "No"}
+[MetaMask] Signature obtained successfully ✅
+[PredictionPulse] Raw query result: {poolA: "10.", poolB: "0.", bettorsA: 1, status: "OPEN"}
+```
 
 ---
 
@@ -101,7 +202,7 @@
 
 ### Installation
 
-\`\`\`bash
+```bash
 # Clone the repository
 git clone https://github.com/mohamedwael201193/Linera-Arcade-hub.git
 cd Linera-Arcade-hub
@@ -111,7 +212,7 @@ npm install
 
 # Start development server
 npm run dev
-\`\`\`
+```
 
 Open [http://localhost:5173](http://localhost:5173) and connect your MetaMask wallet!
 
@@ -119,9 +220,9 @@ Open [http://localhost:5173](http://localhost:5173) and connect your MetaMask wa
 
 ## 🔧 Environment Variables
 
-Create a \`.env\` file in the root directory:
+Create a `.env` file in the root directory:
 
-\`\`\`env
+```env
 # Linera Network Configuration
 VITE_LINERA_NETWORK=conway
 VITE_LINERA_FAUCET_URL=https://faucet.testnet-conway.linera.net
@@ -131,70 +232,136 @@ VITE_LINERA_VALIDATOR_URL=https://validator-1.testnet-conway.linera.net
 VITE_PLAYER_PROFILE_APP_ID=04353e734bfefbf1044903b7ab68eafb710f4a7b286bd8222072f4bdaaa17377
 VITE_GOL_APP_ID=ba94f855a925323524f1341e365a716e8145be404aa92d03b7ac101d4cc4075f
 VITE_PREDICTION_PULSE_APP_ID=903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d
-\`\`\`
+VITE_MEME_AUCTION_APP_ID=b6da523079f466472686cc67c4c994467d4a40bb82c25ee2fd208ff1b99ffdc7
+VITE_TYPING_ARENA_APP_ID=33dfe6536bdebd6cf285ed9e490a9031d27c98605edf7d79a8e16f09c4e3c646
+```
 
 ---
 
 ## 📦 Smart Contracts
 
-All contracts are written in Rust using \`linera-sdk\` and deployed to Conway Testnet.
+All contracts are written in Rust using `linera-sdk` and deployed to Conway Testnet.
 
 ### Deployed Contract IDs
 
 | Contract | App ID |
 |----------|--------|
-| **Player Profile** | \`04353e734bfefbf1044903b7ab68eafb710f4a7b286bd8222072f4bdaaa17377\` |
-| **Game of Life** | \`ba94f855a925323524f1341e365a716e8145be404aa92d03b7ac101d4cc4075f\` |
-| **Prediction Pulse** | \`903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d\` |
+| **Player Profile** | `04353e734bfefbf1044903b7ab68eafb710f4a7b286bd8222072f4bdaaa17377` |
+| **Game of Life** | `ba94f855a925323524f1341e365a716e8145be404aa92d03b7ac101d4cc4075f` |
+| **Prediction Pulse** | `903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d` |
+| **Meme Auction** | `b6da523079f466472686cc67c4c994467d4a40bb82c25ee2fd208ff1b99ffdc7` |
+| **Typing Arena** | `33dfe6536bdebd6cf285ed9e490a9031d27c98605edf7d79a8e16f09c4e3c646` |
 
 ### Contract Structure
 
-\`\`\`
+```
 contracts/
 ├── Cargo.toml              # Workspace manifest
 ├── player_profile/         # On-chain player identity
-│   └── src/
-│       ├── lib.rs          # Types & ABI
-│       ├── contract.rs     # Business logic
-│       ├── service.rs      # GraphQL queries
-│       └── state.rs        # On-chain state
 ├── game_of_life/           # Conway's Game of Life
-│   └── src/
-│       ├── lib.rs
-│       ├── contract.rs
-│       ├── service.rs
-│       └── state.rs
-└── prediction_pulse/       # Betting/prediction market
-    └── src/
-        ├── lib.rs
-        ├── contract.rs
-        ├── service.rs
-        └── state.rs
-\`\`\`
+├── prediction_pulse/       # Betting/prediction market
+├── meme_auction/           # NFT-style meme auctions
+└── typing_arena/           # Speed typing challenges
+```
 
-### GraphQL Mutations (camelCase)
+---
 
-**Prediction Pulse:**
-- \`createRound(title, optionA, optionB, endTime)\`
-- \`placeBet(roundId, choice, amount)\`
-- \`resolveRound(roundId, winner)\`
-- \`claimWinnings(roundId)\`
+## 🖼️ Meme Auction Contract
 
-**Game of Life:**
-- \`toggle(x, y)\` - Toggle cell state
-- \`step\` - Advance one generation
-- \`randomize(seed)\` - Randomize grid
-- \`loadPattern(pattern, x, y)\` - Load preset pattern (BLOCK, BLINKER, GLIDER, etc.)
-- \`clear\` - Reset grid
+### Features
+- Create auctions with image (upload, URL, or AI-generated)
+- Place bids with MetaMask signing
+- Track auction status (Open, Ended, Claimed, Cancelled)
+- Rarity system (Common, Uncommon, Rare, Epic, Legendary)
+- Player stats tracking
+
+### GraphQL Mutations
+
+```graphql
+# Create a new auction
+mutation {
+  createAuction(
+    title: "Cool Cat",
+    imageUrl: "data:image/...",
+    description: "A cool meme",
+    rarity: RARE,
+    startingPrice: "5.",
+    endTime: 1733054962
+  )
+}
+
+# Place a bid
+mutation {
+  placeBid(auctionId: 1, amount: "10.")
+}
+
+# Claim your won meme
+mutation {
+  claimMeme(auctionId: 1)
+}
+```
+
+### AI Image Generation
+
+```typescript
+// Generate meme image using Pollinations AI
+const result = await generateAIImage({
+  prompt: "cat wearing sunglasses on the moon",
+  style: "meme", // meme, cartoon, art, photo
+  width: 512,
+  height: 512
+})
+
+// Result contains base64 data URL
+console.log(result.imageUrl) // data:image/jpeg;base64,...
+```
+
+---
+
+## ⌨️ Typing Arena Contract
+
+### Features
+- Create typing challenges with different difficulties
+- Submit typing results (WPM, accuracy, time)
+- Leaderboard tracking
+- Prize pool distribution
+- Player stats (best WPM, challenges won)
+
+### GraphQL Mutations
+
+```graphql
+# Create a challenge
+mutation {
+  createChallenge(
+    text: "The quick brown fox jumps over the lazy dog",
+    difficulty: MEDIUM,
+    entryFee: "5."
+  )
+}
+
+# Submit typing result
+mutation {
+  submitResult(
+    challengeId: 1,
+    wpm: 85,
+    accuracy: 97,
+    timeTaken: 45
+  )
+}
+
+# Claim prize
+mutation {
+  claimPrize(challengeId: 1)
+}
+```
 
 ---
 
 ## 🦊 MetaMask Integration
 
-This project uses a custom \`MetaMaskSigner\` that implements the Linera \`Signer\` interface:
+This project uses a custom `MetaMaskSigner` that implements the Linera `Signer` interface:
 
-\`\`\`typescript
-// Every mutation triggers MetaMask popup
+```typescript
 export class MetaMaskSigner implements Signer {
   async sign(owner: string, value: Uint8Array): Promise<string> {
     const msgHex = bytesToHex(value)
@@ -205,51 +372,72 @@ export class MetaMaskSigner implements Signer {
     return signature // WITH 0x prefix
   }
 }
-\`\`\`
+```
 
 **Key Implementation Files:**
-- \`src/lib/metamaskSigner.ts\` - Signer implementation
-- \`src/lib/lineraClient.ts\` - Linera client setup
-- \`src/contexts/WalletContext.tsx\` - Global wallet state
+- `src/lib/metamaskSigner.ts` - Signer implementation
+- `src/lib/lineraClient.ts` - Linera client setup
+- `src/contexts/WalletContext.tsx` - Global wallet state
 
 ---
 
-## 🌐 Vercel Deployment
+## 🎨 UI Features
 
-### Step-by-Step Guide
+### Professional SVG Icons
 
-1. **Go to [vercel.com](https://vercel.com)** and sign in
-2. **Click "Add New Project"**
-3. **Import your GitHub repository:** \`mohamedwael201193/Linera-Arcade-hub\`
-4. **Configure Build Settings:**
-   - Framework Preset: \`Vite\`
-   - Build Command: \`npm run build\`
-   - Output Directory: \`dist\`
-   - Install Command: \`npm install\`
+40+ custom SVG icons in `src/components/Icons.tsx`:
 
-5. **Add Environment Variables** (click "Environment Variables"):
+- `TrophyIcon` - For wins and achievements
+- `GavelIcon` - For auctions
+- `SparklesIcon` - For AI generation
+- `KeyboardIcon` - For typing arena
+- `ChartIcon` - For predictions
+- `CoinsIcon` - For tokens/bids
+- `RarityCommonIcon`, `RarityRareIcon`, etc. - For meme rarities
+- And many more...
 
-| Variable | Value |
-|----------|-------|
-| \`VITE_LINERA_NETWORK\` | \`conway\` |
-| \`VITE_LINERA_FAUCET_URL\` | \`https://faucet.testnet-conway.linera.net\` |
-| \`VITE_LINERA_VALIDATOR_URL\` | \`https://validator-1.testnet-conway.linera.net\` |
-| \`VITE_PLAYER_PROFILE_APP_ID\` | \`04353e734bfefbf1044903b7ab68eafb710f4a7b286bd8222072f4bdaaa17377\` |
-| \`VITE_GOL_APP_ID\` | \`ba94f855a925323524f1341e365a716e8145be404aa92d03b7ac101d4cc4075f\` |
-| \`VITE_PREDICTION_PULSE_APP_ID\` | \`903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d\` |
+### Animations
 
-6. **Click "Deploy"**
+All icons support Framer Motion animations:
 
-### Required Headers (Auto-configured)
+```tsx
+<TrophyIcon size={24} animate className="text-yellow-500" />
+```
 
-The \`vite.config.ts\` already includes Cross-Origin Isolation headers required for WASM:
+---
 
-\`\`\`typescript
-headers: {
-  'Cross-Origin-Embedder-Policy': 'require-corp',
-  'Cross-Origin-Opener-Policy': 'same-origin',
+## 📊 Profile Features
+
+### Real Stats Aggregation
+
+The Profile page shows real statistics from all games:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  Total XP: 225    Games Played: 9    Win Rate: 22%       │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  Meme Auction         Typing Arena      Prediction Pulse │
+│  ─────────────        ────────────      ──────────────── │
+│  Created: 3           Completed: 2      Played: 4        │
+│  Won: 0               Won: 0            Won: 1           │
+│  Bids: 5              Best WPM: 85      Wagered: 50      │
+│  Collected: 0         Accuracy: 96%     Won: 10          │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+### 100 LINERA Token Bonus
+
+New users receive 100 LINERA tokens on first connection:
+
+```typescript
+// Automatic bonus on first connect
+if (!localStorage.getItem(`bonus_claimed_${chainId}`)) {
+  setBalance(balance + 100)
+  localStorage.setItem(`bonus_claimed_${chainId}`, 'true')
 }
-\`\`\`
+```
 
 ---
 
@@ -263,6 +451,7 @@ headers: {
 | **Wallet** | MetaMask (personal_sign) |
 | **Client** | @linera/client (WASM) |
 | **Contracts** | Rust + linera-sdk + async_graphql |
+| **AI Images** | Pollinations.ai (free, no API key) |
 
 ---
 
@@ -272,25 +461,56 @@ headers: {
 
 | Rust | GraphQL |
 |------|---------|
-| \`snake_case\` fields | \`camelCase\` fields |
-| \`PascalCase\` enum variants | \`SCREAMING_CASE\` values |
-| \`CreateRound\` operation | \`createRound\` mutation |
+| `snake_case` fields | `camelCase` fields |
+| `PascalCase` enum variants | `SCREAMING_CASE` values |
 
 ### Linera Time Units
 
-\`\`\`rust
+```rust
 // Rust returns microseconds, JS sends seconds
 let now = self.runtime.system_time().micros();
-let now_seconds = now / 1_000_000;  // Convert to seconds for comparison
-\`\`\`
+let now_seconds = now / 1_000_000;  // Convert for comparison
+```
 
 ### Amount Format
 
-\`\`\`typescript
+```typescript
 // Linera Amount requires decimal point
 amount: "10."  // ✅ Valid
 amount: "10"   // ❌ Invalid
-\`\`\`
+```
+
+---
+
+## 🚀 Deployment
+
+### Build Contracts
+
+```bash
+cd contracts
+cargo build --release --target wasm32-unknown-unknown
+```
+
+### Deploy to Conway Testnet
+
+```bash
+# Meme Auction
+linera publish-and-create \
+  target/wasm32-unknown-unknown/release/meme_auction_contract.wasm \
+  target/wasm32-unknown-unknown/release/meme_auction_service.wasm 2>&1
+
+# Typing Arena  
+linera publish-and-create \
+  target/wasm32-unknown-unknown/release/typing_arena_contract.wasm \
+  target/wasm32-unknown-unknown/release/typing_arena_service.wasm 2>&1
+```
+
+### Deploy Frontend to Vercel
+
+1. Go to [vercel.com](https://vercel.com)
+2. Import repository: `mohamedwael201193/Linera-Arcade-hub`
+3. Add environment variables (see `.env` section)
+4. Deploy!
 
 ---
 
@@ -298,13 +518,17 @@ amount: "10"   // ❌ Invalid
 
 This project demonstrates:
 
-- ✅ **Full on-chain game state management**
+- ✅ **5 fully on-chain smart contracts**
 - ✅ **MetaMask wallet integration** with custom Signer
 - ✅ **Real-time blockchain queries** via GraphQL
-- ✅ **Multiple smart contracts** working together
-- ✅ **Cross-Origin Isolated WASM** execution
-- ✅ **Conway's Game of Life** running entirely on-chain
+- ✅ **AI image generation** for meme creation
+- ✅ **40+ professional SVG icons**
+- ✅ **Real player stats** aggregation
+- ✅ **Token bonus system**
+- ✅ **Conway's Game of Life** entirely on-chain
 - ✅ **Prediction market** with real betting pools
+- ✅ **NFT-style auctions** with bidding
+- ✅ **Speed typing challenges** with WPM tracking
 
 ---
 
@@ -318,13 +542,14 @@ MIT License
 
 - [Linera Protocol](https://linera.io) for the blockchain platform
 - [MetaMask](https://metamask.io) for wallet integration
+- [Pollinations.ai](https://pollinations.ai) for free AI image generation
 - The Linera community for documentation and support
 
 ---
 
 <div align="center">
 
-**🏆 Built for the Linera Buildathon**
+**🏆 Built for the Linera Buildathon - December 2025**
 
 ![Powered by Linera](https://img.shields.io/badge/Powered%20by-Linera-orange?style=flat-square)
 

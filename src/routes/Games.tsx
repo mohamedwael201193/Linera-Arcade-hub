@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { ArrowRightIcon, ChartIcon, DnaIcon, ImageIcon, KeyboardIcon, RocketIcon } from '../components/Icons'
 
 interface Game {
   id: string
   title: string
   description: string
-  icon: string
+  icon: React.ComponentType<{ className?: string; size?: number }>
+  iconColor: string
   difficulty: 'Easy' | 'Medium' | 'Hard'
   path: string
   available: boolean
@@ -17,7 +19,8 @@ const games: Game[] = [
     id: 'gol',
     title: 'Game of Life',
     description: 'Classic cellular automaton simulation running on your microchain. Watch patterns evolve!',
-    icon: '🧬',
+    icon: DnaIcon,
+    iconColor: 'text-green-400',
     difficulty: 'Easy',
     path: '/games/gol',
     available: true,
@@ -27,7 +30,8 @@ const games: Game[] = [
     id: 'prediction-pulse',
     title: 'Prediction Pulse',
     description: 'Make predictions on simple yes/no outcomes. Test your intuition and earn wins!',
-    icon: '📊',
+    icon: ChartIcon,
+    iconColor: 'text-blue-400',
     difficulty: 'Easy',
     path: '/games/prediction-pulse',
     available: true,
@@ -37,20 +41,22 @@ const games: Game[] = [
     id: 'typing-arena',
     title: 'Typing Arena',
     description: 'Race against time and other players in fast-paced typing challenges.',
-    icon: '⌨️',
+    icon: KeyboardIcon,
+    iconColor: 'text-purple-400',
     difficulty: 'Medium',
     path: '/games/typing-arena',
-    available: false,
+    available: true,
     category: 'Skill',
   },
   {
     id: 'meme-auction',
     title: 'Meme Auction',
     description: 'Bid on and collect rare memes in this on-chain auction house.',
-    icon: '🖼️',
+    icon: ImageIcon,
+    iconColor: 'text-pink-400',
     difficulty: 'Medium',
     path: '/games/meme-auction',
-    available: false,
+    available: true,
     category: 'Trading',
   },
 ]
@@ -98,7 +104,12 @@ export function Games() {
         className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-primary-500/10 to-secondary-500/10 border border-primary-500/20"
       >
         <div className="flex items-center gap-4">
-          <span className="text-4xl">🚀</span>
+          <motion.div
+            animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <RocketIcon className="text-primary-400" size={48} />
+          </motion.div>
           <div>
             <h3 className="font-bold text-text-primary">More Games Coming Soon!</h3>
             <p className="text-text-secondary text-sm">
@@ -112,6 +123,8 @@ export function Games() {
 }
 
 function GameCard({ game }: { game: Game }) {
+  const IconComponent = game.icon
+  
   const CardContent = (
     <motion.div
       whileHover={game.available ? { scale: 1.02, y: -4 } : {}}
@@ -124,7 +137,12 @@ function GameCard({ game }: { game: Game }) {
       {/* Header */}
       <div className="p-6 pb-4">
         <div className="flex items-start justify-between mb-4">
-          <span className="text-4xl">{game.icon}</span>
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <IconComponent className={game.iconColor} size={40} />
+          </motion.div>
           <div className="flex items-center gap-2">
             {!game.available && (
               <span className="badge badge-warning">Coming Soon</span>
@@ -148,7 +166,7 @@ function GameCard({ game }: { game: Game }) {
           {game.available ? (
             <span className="text-primary-400 font-medium text-sm flex items-center gap-1">
               Play Now
-              <ArrowIcon className="w-4 h-4" />
+              <ArrowRightIcon size={16} />
             </span>
           ) : (
             <span className="text-text-muted text-sm">Not Available</span>
@@ -163,12 +181,4 @@ function GameCard({ game }: { game: Game }) {
   }
 
   return CardContent
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-    </svg>
-  )
 }

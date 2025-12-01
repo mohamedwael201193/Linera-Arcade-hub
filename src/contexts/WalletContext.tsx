@@ -62,13 +62,14 @@ function saveProfileToStorage(profile: PlayerProfile | null, owner: string | nul
 }
 
 // Helper to load profile from localStorage
-function loadProfileFromStorage(owner: string): PlayerProfile | null {
+// Profile is keyed by chainId since that's how the contract stores profiles
+function loadProfileFromStorage(chainId: string): PlayerProfile | null {
   try {
     const saved = localStorage.getItem(PROFILE_STORAGE_KEY)
     if (saved) {
       const data = JSON.parse(saved)
-      // Only return profile if it matches the current owner
-      if (data.owner === owner && data.profile) {
+      // Only return profile if it matches the current chainId
+      if (data.owner === chainId && data.profile) {
         return data.profile
       }
     }
@@ -91,7 +92,8 @@ interface WalletProviderProps {
 }
 
 // Helper to check profile on chain with timeout
-async function fetchProfileFromChain(owner: string, appId: string, timeoutMs = 15000): Promise<PlayerProfile | null> {
+// IMPORTANT: Profile contract stores profiles keyed by chainId, NOT by wallet owner address
+async function fetchProfileFromChain(chainId: string, appId: string, timeoutMs = 15000): Promise<PlayerProfile | null> {
   try {
     // Create a promise that rejects after timeout
     const timeoutPromise = new Promise<never>((_, reject) => {
@@ -99,10 +101,11 @@ async function fetchProfileFromChain(owner: string, appId: string, timeoutMs = 1
     })
     
     // Use the exact GraphQL format for Linera queries
-    const escapedOwner = owner.replace(/"/g, '\\"')
+    // The profile contract uses chainId as the owner key
+    const escapedChainId = chainId.replace(/"/g, '\\"')
     const fetchPromise = queryApplication(appId, `
       query {
-        profile(owner: "${escapedOwner}") {
+        profile(owner: "${escapedChainId}") {
           name
           createdAt
           xp
@@ -147,8 +150,8 @@ export function WalletProvider({ children }: WalletProviderProps) {
       setChainId(savedChainId)
       setMode(savedMode)
       
-      // Try to load profile from localStorage first
-      const savedProfile = loadProfileFromStorage(savedOwner)
+      // Try to load profile from localStorage first (keyed by chainId)
+      const savedProfile = loadProfileFromStorage(savedChainId)
       if (savedProfile) {
         console.log('[Wallet] Restored profile from storage:', savedProfile.name)
         setProfile(savedProfile)
@@ -167,14 +170,14 @@ export function WalletProvider({ children }: WalletProviderProps) {
         setMode(provider.mode)
         
         // If we already have a profile from storage, stay ready
-        // Otherwise try to fetch from chain
+        // Otherwise try to fetch from chain using chainId (not owner address)
         if (!savedProfile) {
           const profileAppId = import.meta.env.VITE_PLAYER_PROFILE_APP_ID
           if (profileAppId && profileAppId !== 'REPLACE_WITH_DEPLOYED_ID') {
-            fetchProfileFromChain(provider.owner, profileAppId, 8000).then(chainProfile => {
+            fetchProfileFromChain(provider.chainId, profileAppId, 8000).then(chainProfile => {
               if (chainProfile) {
                 setProfile(chainProfile)
-                saveProfileToStorage(chainProfile, provider.owner)
+                saveProfileToStorage(chainProfile, provider.chainId)
                 setState('ready')
               } else {
                 setState('no-profile')
@@ -219,11 +222,11 @@ export function WalletProvider({ children }: WalletProviderProps) {
       console.log('[Wallet] Mode:', provider.mode, '- Signer:', provider.signer ? 'Available' : 'None')
       
       // Check if profile exists (only if PlayerProfile app is configured)
-      // Use a short timeout to prevent UI hanging on slow validators
+      // Use chainId for profile lookup (contract stores profiles by chainId, not wallet address)
       const profileAppId = import.meta.env.VITE_PLAYER_PROFILE_APP_ID
       if (profileAppId && profileAppId !== 'REPLACE_WITH_DEPLOYED_ID') {
         try {
-          const existingProfile = await fetchProfileFromChain(provider.owner, profileAppId, 8000)
+          const existingProfile = await fetchProfileFromChain(provider.chainId, profileAppId, 8000)
           if (existingProfile) {
             setProfile(existingProfile)
             setState('ready')
@@ -299,23 +302,23 @@ export function WalletProvider({ children }: WalletProviderProps) {
         gamesPlayed: 0,
       }
       setProfile(localProfile)
-      saveProfileToStorage(localProfile, owner)
+      saveProfileToStorage(localProfile, chainId)
       setState('ready')
       
       // Try to fetch the real profile in background (non-blocking)
-      // with a timeout to prevent hanging
+      // Use chainId for lookup since contract stores profiles by chainId
       const fetchWithTimeout = async () => {
         try {
           const controller = new AbortController()
           const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
           
-          const newProfile = await fetchProfileFromChain(owner, profileAppId)
+          const newProfile = await fetchProfileFromChain(chainId, profileAppId)
           clearTimeout(timeoutId)
           
           if (newProfile) {
             console.log('[Wallet] Profile fetched from chain:', newProfile)
             setProfile(newProfile)
-            saveProfileToStorage(newProfile, owner)
+            saveProfileToStorage(newProfile, chainId)
           }
         } catch (fetchError) {
           // Ignore fetch errors - we already have a local profile
@@ -333,18 +336,19 @@ export function WalletProvider({ children }: WalletProviderProps) {
   }, [owner, chainId])
 
   const refreshProfile = useCallback(async () => {
-    if (!owner) return
+    if (!chainId) return
     
     const profileAppId = import.meta.env.VITE_PLAYER_PROFILE_APP_ID
     if (!profileAppId || profileAppId === 'REPLACE_WITH_DEPLOYED_ID') {
       return
     }
     
-    const currentProfile = await fetchProfileFromChain(owner, profileAppId)
+    // Use chainId for lookup since contract stores profiles by chainId
+    const currentProfile = await fetchProfileFromChain(chainId, profileAppId)
     if (currentProfile) {
       setProfile(currentProfile)
     }
-  }, [owner])
+  }, [chainId])
 
   const openModal = useCallback(() => setIsModalOpen(true), [])
   const closeModal = useCallback(() => setIsModalOpen(false), [])

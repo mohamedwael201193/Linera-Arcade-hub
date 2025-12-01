@@ -1,25 +1,40 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { GamepadIcon, UserIcon, ZapIcon } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
+
+// Lock Icon component
+function LockIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0110 0v4" />
+    </svg>
+  )
+}
 
 const features = [
   {
-    icon: '🎮',
+    icon: GamepadIcon,
+    iconClass: 'text-primary-400',
     title: 'On-chain Games',
     description: 'Play games where every move is stored on your personal microchain',
   },
   {
-    icon: '👤',
+    icon: UserIcon,
+    iconClass: 'text-green-400',
     title: 'Player Profiles',
     description: 'Your identity, XP, and achievements live on your own microchain',
   },
   {
-    icon: '⚡',
+    icon: ZapIcon,
+    iconClass: 'text-yellow-400',
     title: 'Fast as Web2',
     description: 'Near-instant transactions with Linera\'s parallel microchain architecture',
   },
   {
-    icon: '🔒',
+    icon: LockIcon,
+    iconClass: 'text-purple-400',
     title: 'Trustless as Web3',
     description: 'Full security and ownership of your data on Conway Testnet',
   },
@@ -172,9 +187,13 @@ export function Home() {
               transition={{ delay: 0.1 * index }}
               className="card card-hover p-6 group"
             >
-              <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform">
-                {feature.icon}
-              </span>
+              <motion.div
+                className="mb-4"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <feature.icon className={feature.iconClass} />
+              </motion.div>
               <h3 className="text-lg font-semibold text-text-primary mb-2">
                 {feature.title}
               </h3>

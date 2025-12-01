@@ -1,9 +1,29 @@
 import { motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ChartIcon, LightbulbIcon, PlusIcon, RefreshIcon } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
 import type { Bet, PlayerStats, Round } from '../lib/predictionPulse'
 import * as pp from '../lib/predictionPulse'
+
+// Custom A and B icons for options
+function OptionAIcon({ className = '', size = 24 }: { className?: string; size?: number }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
+      <text x="12" y="16" fontSize="12" fontWeight="bold" fill="currentColor" textAnchor="middle">A</text>
+    </svg>
+  )
+}
+
+function OptionBIcon({ className = '', size = 24 }: { className?: string; size?: number }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
+      <text x="12" y="16" fontSize="12" fontWeight="bold" fill="currentColor" textAnchor="middle">B</text>
+    </svg>
+  )
+}
 
 export function GamePredictionPulse() {
   const { state, openModal } = useWallet()
@@ -265,15 +285,21 @@ export function GamePredictionPulse() {
             className="flex items-center justify-between mb-2"
           >
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold text-text-primary">Current Round</h2>
-              <button
+              <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
+                <ChartIcon className="text-primary-400" size={24} />
+                Current Round
+              </h2>
+              <motion.button
+                whileHover={{ scale: 1.05, rotate: 180 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => loadData()}
                 disabled={loading}
-                className="text-sm text-primary-400 hover:text-primary-300 disabled:opacity-50"
+                className="text-sm text-primary-400 hover:text-primary-300 disabled:opacity-50 flex items-center gap-1"
                 title="Refresh rounds"
               >
-                🔄 Refresh
-              </button>
+                <RefreshIcon size={16} animate={loading} />
+                Refresh
+              </motion.button>
             </div>
             <span className="badge badge-primary">On-chain Predictions</span>
           </motion.div>
@@ -302,12 +328,18 @@ export function GamePredictionPulse() {
               {/* Options/Pools display */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="p-4 rounded-lg bg-success/10 border border-success/30">
-                  <p className="text-sm text-text-muted mb-1">🅰️ {currentRound.optionA}</p>
+                  <p className="text-sm text-text-muted mb-1 flex items-center gap-1">
+                    <OptionAIcon className="text-success" size={18} />
+                    {currentRound.optionA}
+                  </p>
                   <p className="text-2xl font-bold text-success">{pp.formatAmount(currentRound.poolA)}</p>
                   <p className="text-xs text-text-muted">{currentRound.bettorsA} bettors</p>
                 </div>
                 <div className="p-4 rounded-lg bg-error/10 border border-error/30">
-                  <p className="text-sm text-text-muted mb-1">🅱️ {currentRound.optionB}</p>
+                  <p className="text-sm text-text-muted mb-1 flex items-center gap-1">
+                    <OptionBIcon className="text-error" size={18} />
+                    {currentRound.optionB}
+                  </p>
                   <p className="text-2xl font-bold text-error">{pp.formatAmount(currentRound.poolB)}</p>
                   <p className="text-xs text-text-muted">{currentRound.bettorsB} bettors</p>
                 </div>
@@ -338,7 +370,9 @@ export function GamePredictionPulse() {
                     disabled={!!signingAction || state !== 'ready'}
                     className="p-4 rounded-xl border-2 border-success hover:bg-success/20 transition-all text-center disabled:opacity-50"
                   >
-                    <span className="text-2xl mb-2 block">🅰️</span>
+                    <span className="flex justify-center mb-2">
+                      <OptionAIcon className="text-success" size={32} />
+                    </span>
                     <span className="text-lg font-bold text-success">{currentRound.optionA}</span>
                     <p className="text-xs text-text-muted mt-1">
                       Win: ~{getPotentialWinnings(true, currentRound)} LINERA
@@ -351,7 +385,9 @@ export function GamePredictionPulse() {
                     disabled={!!signingAction || state !== 'ready'}
                     className="p-4 rounded-xl border-2 border-error hover:bg-error/20 transition-all text-center disabled:opacity-50"
                   >
-                    <span className="text-2xl mb-2 block">🅱️</span>
+                    <span className="flex justify-center mb-2">
+                      <OptionBIcon className="text-error" size={32} />
+                    </span>
                     <span className="text-lg font-bold text-error">{currentRound.optionB}</span>
                     <p className="text-xs text-text-muted mt-1">
                       Win: ~{getPotentialWinnings(false, currentRound)} LINERA
@@ -372,8 +408,8 @@ export function GamePredictionPulse() {
               {/* Resolved round - show result */}
               {currentRound.status === 'RESOLVED' && currentRound.winner !== null && (
                 <div className="mt-4 p-4 rounded-lg bg-background-dark">
-                  <p className="text-lg font-bold text-center">
-                    Winner: {currentRound.winner ? `🅰️ ${currentRound.optionA}` : `🅱️ ${currentRound.optionB}`}
+                  <p className="text-lg font-bold text-center flex items-center justify-center gap-2">
+                    Winner: {currentRound.winner ? <><OptionAIcon className="text-success" size={24} /> {currentRound.optionA}</> : <><OptionBIcon className="text-error" size={24} /> {currentRound.optionB}</>}
                   </p>
                 </div>
               )}
@@ -471,9 +507,10 @@ export function GamePredictionPulse() {
           {state === 'ready' && !showCreateForm && currentRound && (
             <button 
               onClick={() => setShowCreateForm(true)}
-              className="btn-secondary w-full"
+              className="btn-secondary w-full flex items-center justify-center gap-2"
             >
-              + Create New Round
+              <PlusIcon size={18} />
+              Create New Round
             </button>
           )}
 
@@ -596,7 +633,10 @@ export function GamePredictionPulse() {
 
           {/* How to Play */}
           <div className="card p-6">
-            <h3 className="font-bold text-text-primary mb-4">How to Play</h3>
+            <h3 className="font-bold text-text-primary mb-4 flex items-center gap-2">
+              <LightbulbIcon className="text-yellow-400" size={24} />
+              How to Play
+            </h3>
             <ul className="space-y-3 text-sm text-text-secondary">
               <li className="flex gap-3">
                 <span className="text-primary-400">1.</span>
@@ -604,7 +644,7 @@ export function GamePredictionPulse() {
               </li>
               <li className="flex gap-3">
                 <span className="text-primary-400">2.</span>
-                Choose Option A 🅰️ or Option B 🅱️
+                <span className="flex items-center gap-1">Choose Option <OptionAIcon className="text-success" size={16} /> or Option <OptionBIcon className="text-error" size={16} /></span>
               </li>
               <li className="flex gap-3">
                 <span className="text-primary-400">3.</span>
