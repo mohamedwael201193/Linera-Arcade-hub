@@ -19,8 +19,24 @@ import {
     ZapIcon
 } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
+import * as nexus from '../lib/arcadeNexus'
 import type { Challenge, Difficulty, TypistStats } from '../lib/typingArena'
 import * as ta from '../lib/typingArena'
+import { XP_VALUES } from '../lib/xpConfig'
+
+// Helper to record XP (silent failure)
+async function recordTypingXP(xp: number) {
+  if (!nexus.isArcadeNexusConfigured()) return
+  try {
+    const seasons = await nexus.getActiveSeasons()
+    if (seasons.length > 0) {
+      await nexus.recordGameAction(seasons[0].id, 'TYPING', xp)
+      console.log('[TypingArena] Recorded', xp, 'XP')
+    }
+  } catch (err) {
+    console.log('[TypingArena] XP recording skipped:', err)
+  }
+}
 
 export function GameTypingArena() {
   const { state, openModal } = useWallet()
@@ -211,6 +227,10 @@ export function GameTypingArena() {
         completed,
         timeTaken
       )
+      
+      // Record XP for completing the challenge
+      const xpEarned = completed ? XP_VALUES.typing.complete : XP_VALUES.typing.participate
+      recordTypingXP(xpEarned)
       
       setSuccess(`Result submitted! WPM: ${wpm}, Accuracy: ${accuracy}%`)
       setActiveChallenge(null)

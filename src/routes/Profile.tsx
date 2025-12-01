@@ -5,6 +5,7 @@ import {
     ChartIcon,
     CheckIcon,
     CoinsIcon,
+    CrownIcon,
     DnaIcon,
     GamepadIcon,
     GavelIcon,
@@ -17,12 +18,14 @@ import {
     TargetIcon,
     TrophyIcon,
     WalletIcon,
-    ZapIcon,
+    ZapIcon
 } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
+import * as nexus from '../lib/arcadeNexus'
 import * as ma from '../lib/memeAuction'
 import * as pp from '../lib/predictionPulse'
 import * as ta from '../lib/typingArena'
+import { formatXp, getRankForXp, getRankProgress, getXpToNextRank } from '../lib/xpConfig'
 
 // Local storage key for balance
 const BALANCE_KEY = 'linera_arcade_balance'
@@ -34,9 +37,15 @@ interface GameStats {
   prediction: pp.PlayerStats | null
 }
 
+interface NexusStats {
+  seasonStats: nexus.PlayerSeasonStats | null
+  activeSeason: nexus.Season | null
+}
+
 export function Profile() {
   const { state, profile, owner, chainId, openModal } = useWallet()
   const [stats, setStats] = useState<GameStats>({ meme: null, typing: null, prediction: null })
+  const [nexusStats, setNexusStats] = useState<NexusStats>({ seasonStats: null, activeSeason: null })
   const [balance, setBalance] = useState<number>(0)
   const [bonusClaimed, setBonusClaimed] = useState<boolean>(false)
   const [loading, setLoading] = useState(true)
@@ -73,6 +82,20 @@ export function Profile() {
         typing: typingStats.status === 'fulfilled' ? typingStats.value : null,
         prediction: predictionStats.status === 'fulfilled' ? predictionStats.value : null,
       })
+      
+      // Fetch Arcade Nexus stats if configured
+      if (nexus.isArcadeNexusConfigured()) {
+        try {
+          const activeSeasons = await nexus.getActiveSeasons()
+          if (activeSeasons.length > 0) {
+            const activeSeason = activeSeasons[0]
+            const seasonStats = await nexus.getPlayerSeasonStats(chainId, activeSeason.id)
+            setNexusStats({ seasonStats, activeSeason })
+          }
+        } catch (err) {
+          console.log('[Profile] Arcade Nexus not available:', err)
+        }
+      }
     } catch (error) {
       console.error('[Profile] Failed to fetch stats:', error)
     } finally {
@@ -247,6 +270,74 @@ export function Profile() {
                 </>
               )}
             </button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Arcade Nexus Season XP Card */}
+      {nexusStats.seasonStats && nexusStats.activeSeason && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card overflow-hidden"
+        >
+          <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <CrownIcon size={24} className="text-white" />
+                <div>
+                  <span className="text-white/80 text-sm">Current Season</span>
+                  <h3 className="text-white font-bold">{nexusStats.activeSeason.title}</h3>
+                </div>
+              </div>
+              <Link 
+                to="/seasons" 
+                className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors"
+              >
+                View Details
+              </Link>
+            </div>
+          </div>
+          <div className="p-4 bg-surface-secondary">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">{getRankForXp(nexusStats.seasonStats.totalXp).icon}</span>
+                <div>
+                  <span className="font-bold text-text-primary">{getRankForXp(nexusStats.seasonStats.totalXp).name}</span>
+                  <p className="text-text-muted text-xs">{formatXp(nexusStats.seasonStats.totalXp)} XP</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-text-muted text-xs">Next Rank</span>
+                <p className="text-amber-400 text-sm font-medium">{formatXp(getXpToNextRank(nexusStats.seasonStats.totalXp))} XP to go</p>
+              </div>
+            </div>
+            <div className="h-2 bg-surface rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${getRankProgress(nexusStats.seasonStats.totalXp)}%` }}
+                transition={{ duration: 1 }}
+                className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-4 mt-4 text-center">
+              <div>
+                <span className="text-lg font-bold text-purple-400">{nexusStats.seasonStats.predictionScore}</span>
+                <p className="text-xs text-text-muted">Prediction</p>
+              </div>
+              <div>
+                <span className="text-lg font-bold text-pink-400">{nexusStats.seasonStats.memeScore}</span>
+                <p className="text-xs text-text-muted">Meme</p>
+              </div>
+              <div>
+                <span className="text-lg font-bold text-green-400">{nexusStats.seasonStats.typingScore}</span>
+                <p className="text-xs text-text-muted">Typing</p>
+              </div>
+              <div>
+                <span className="text-lg font-bold text-blue-400">{nexusStats.seasonStats.lifeScore}</span>
+                <p className="text-xs text-text-muted">Life</p>
+              </div>
+            </div>
           </div>
         </motion.div>
       )}

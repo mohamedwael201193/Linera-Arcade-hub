@@ -9,6 +9,7 @@ members = [
     "prediction_pulse",
     "meme_auction",
     "typing_arena",
+    "arcade_nexus",
 ]
 
 [workspace.package]

@@ -3,8 +3,24 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChartIcon, LightbulbIcon, PlusIcon, RefreshIcon } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
+import * as nexus from '../lib/arcadeNexus'
 import type { Bet, PlayerStats, Round } from '../lib/predictionPulse'
 import * as pp from '../lib/predictionPulse'
+import { XP_VALUES } from '../lib/xpConfig'
+
+// Helper to record XP (silent failure)
+async function recordPredictionXP(xp: number) {
+  if (!nexus.isArcadeNexusConfigured()) return
+  try {
+    const seasons = await nexus.getActiveSeasons()
+    if (seasons.length > 0) {
+      await nexus.recordGameAction(seasons[0].id, 'PREDICTION', xp)
+      console.log('[PredictionPulse] Recorded', xp, 'XP')
+    }
+  } catch (err) {
+    console.log('[PredictionPulse] XP recording skipped:', err)
+  }
+}
 
 // Custom A and B icons for options
 function OptionAIcon({ className = '', size = 24 }: { className?: string; size?: number }) {
@@ -158,6 +174,9 @@ export function GamePredictionPulse() {
       
       await pp.placeBet(roundId, choice, betAmount.toString())
       
+      // Record XP for placing a bet
+      recordPredictionXP(XP_VALUES.prediction.bet)
+      
       setSuccess(`Successfully placed bet on ${choiceName}! Waiting for chain to confirm...`)
       
       // Wait for chain to sync before reloading (chain confirmation takes time)
@@ -187,6 +206,9 @@ export function GamePredictionPulse() {
       setSuccess(null)
       
       await pp.claimWinnings(roundId)
+      
+      // Record XP for winning (correct prediction)
+      recordPredictionXP(XP_VALUES.prediction.win)
       
       setSuccess('Winnings claimed!')
       await loadData()

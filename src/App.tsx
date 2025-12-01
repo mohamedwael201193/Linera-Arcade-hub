@@ -8,6 +8,7 @@ import { GameTypingArena } from './routes/GameTypingArena'
 import { Games } from './routes/Games'
 import { Home } from './routes/Home'
 import { Profile } from './routes/Profile'
+import { SeasonsAndQuests } from './routes/SeasonsAndQuests'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/games/prediction-pulse" element={<GamePredictionPulse />} />
             <Route path="/games/meme-auction" element={<GameMemeAuction />} />
             <Route path="/games/typing-arena" element={<GameTypingArena />} />
+            <Route path="/seasons" element={<SeasonsAndQuests />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </Layout>

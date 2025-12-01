@@ -562,3 +562,59 @@ export function LinkIcon({ className = '', size = 24 }: IconProps) {
     </svg>
   )
 }
+
+// Crown Icon for Ranks
+export function CrownIcon({ className = '', size = 24, animate = false }: IconProps) {
+  const icon = (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 17h20v2H2z" />
+      <path d="M12 2l3 5 5-2-2 7H6L4 5l5 2 3-5z" />
+    </svg>
+  )
+  return animate ? (
+    <motion.div animate={{ y: [0, -2, 0], scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+      {icon}
+    </motion.div>
+  ) : icon
+}
+
+// Fire/Flame Icon for Streaks
+export function FireIcon({ className = '', size = 24, animate = false }: IconProps) {
+  const icon = (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 23c-4.97 0-9-3.58-9-8 0-2.52 1.17-4.88 3-6.5 1.13-1 2.5-1.75 4-2.5-.01 1.15.68 2.18 1.75 2.63a3.5 3.5 0 003.76-.63c.35-.33.65-.7.89-1.11.19-.31.33-.65.42-1 .08-.32.12-.64.12-.96 0-.16-.01-.31-.03-.47C18.44 5.6 20 8.14 20 11c0 6.63-4.03 12-8 12zm0-20c-.18.46-.39.9-.64 1.32-.25.42-.55.81-.89 1.15A2.5 2.5 0 017.25 7c-.02-.42.08-.85.29-1.23.21-.38.51-.7.87-.93A9.51 9.51 0 005 11c0 4.42 4.03 8 7 8s7-3.58 7-8c0-3.17-2.12-6.01-5.24-7.32.18.42.3.87.34 1.32.02.23.02.45 0 .68-.03.23-.09.45-.17.66a4.5 4.5 0 01-1.93 2.16z" />
+    </svg>
+  )
+  return animate ? (
+    <motion.div animate={{ scale: [1, 1.15, 1], y: [0, -2, 0] }} transition={{ duration: 0.6, repeat: Infinity }}>
+      {icon}
+    </motion.div>
+  ) : icon
+}
+
+// Trophy Cup Icon (filled version)
+export function TrophyCupIcon({ className = '', size = 24, animate = false }: IconProps) {
+  const icon = (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
+    </svg>
+  )
+  return animate ? (
+    <motion.div animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+      {icon}
+    </motion.div>
+  ) : icon
+}
+
+// Seasons/Calendar Icon
+export function SeasonsIcon({ className = '', size = 24 }: IconProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <circle cx="12" cy="16" r="3" />
+    </svg>
+  )
+}

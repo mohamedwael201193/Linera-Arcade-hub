@@ -19,7 +19,7 @@
 
 ## ✨ Features
 
-### 🎮 5 Fully On-Chain Games
+### 🎮 6 Fully On-Chain Games
 
 | Game | Description | Status |
 |------|-------------|--------|
@@ -28,15 +28,71 @@
 | 👤 **Player Profile** | On-chain identity & stats tracking | ✅ **Fully Working** |
 | 🖼️ **Meme Auction** | NFT-style meme auctions with AI image generation | ✅ **Fully Working** |
 | ⌨️ **Typing Arena** | Speed typing challenges with WPM tracking | ✅ **Fully Working** |
+| 🧠 **Arcade Nexus** | AI-powered cross-game reputation & live ops layer | ✅ **Fully Working** |
 
 ### 🔥 Key Features
 
+- **🧠 Arcade Nexus** - Cross-game reputation, seasons, quests, XP & leaderboards
 - **🤖 AI Image Generation** - Create meme images using Pollinations AI
 - **🎨 40+ Professional SVG Icons** - No emojis, pure professional design
 - **💰 100 LINERA Token Bonus** - New users get tokens on first connect
 - **📊 Real Profile Stats** - Aggregated stats from all games
 - **🦊 MetaMask Integration** - Every action requires wallet signature
 - **⛓️ 100% On-Chain** - No mock data, all blockchain-powered
+
+---
+
+## 🧠 Arcade Nexus – AI-Powered Cross-Game Reputation & Live Ops Layer
+
+Linera Arcade Hub is not just a collection of games. With **Arcade Nexus**, it becomes an **AI-powered, cross-game reputation and live-ops engine** for the entire Linera gaming ecosystem.
+
+### Core Features
+
+#### 1. Cross-Game Skill Index (Arcade Skill Index)
+A per-player, per-season score calculated from on-chain performance across all Arcade Hub games:
+- **Strategy & risk** in Prediction Pulse
+- **Market intuition** in Meme Auction  
+- **Speed & consistency** in Typing Arena
+- **Pattern mastery** in Game of Life
+
+#### 2. On-Chain Seasons & Battle-Pass-Style Progression
+Time-bounded seasons (e.g., "Season 1 - Genesis", "Neon Season", "Meme Season") that:
+- Aggregate XP from all games
+- Rank players globally on leaderboards
+- Store season badges and ranks on-chain (Top 1%, Top 10%, etc.)
+- Display real-time countdown timers
+
+#### 3. Cross-Game Quest & Bounty Board
+Quests that span multiple games, defined and settled on-chain:
+- Example: *"Win 3 Prediction Pulse rounds, reach 80+ WPM in Typing Arena, and win 1 Meme Auction → +300 XP + 'Arcade Strategist' badge."*
+
+#### 4. AI Live-Ops Director (Off-Chain + On-Chain Integration)
+An optional off-chain AI service that:
+- Suggests personalized quests for each player
+- Adjusts XP rewards per season theme
+- Highlights which game best fits the player's skill profile
+
+#### 5. Open Skill Oracle for Other Linera dApps
+Any Linera dApp can query a player's:
+- Arcade Skill Index
+- Season rank and badges
+- Completed quests
+
+### XP & Rank System
+
+| Rank | XP Required | Badge |
+|------|-------------|-------|
+| 🥉 Bronze | 0 - 999 | Beginner |
+| 🥈 Silver | 1,000 - 4,999 | Intermediate |
+| 🥇 Gold | 5,000 - 9,999 | Advanced |
+| 💎 Platinum | 10,000 - 24,999 | Expert |
+| 💠 Diamond | 25,000 - 49,999 | Master |
+| 👑 Legendary | 50,000+ | Legend |
+
+### Season 1 - Genesis (Live)
+- **Duration:** Dec 1 - Dec 31, 2025
+- **Theme:** Launch Season  
+- **Status:** ✅ Active with 29d remaining
 
 ---
 
@@ -234,6 +290,7 @@ VITE_GOL_APP_ID=ba94f855a925323524f1341e365a716e8145be404aa92d03b7ac101d4cc4075f
 VITE_PREDICTION_PULSE_APP_ID=903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d
 VITE_MEME_AUCTION_APP_ID=b6da523079f466472686cc67c4c994467d4a40bb82c25ee2fd208ff1b99ffdc7
 VITE_TYPING_ARENA_APP_ID=33dfe6536bdebd6cf285ed9e490a9031d27c98605edf7d79a8e16f09c4e3c646
+VITE_ARCADE_NEXUS_APP_ID=28ebf71a6e3cebc45ce3b97ddf9d3e4f176e414711b5b83aee03583f695ff12b
 ```
 
 ---
@@ -251,6 +308,7 @@ All contracts are written in Rust using `linera-sdk` and deployed to Conway Test
 | **Prediction Pulse** | `903e732c0207570b5e37519bac97f841d64dfc06817c0060caf696a6af67fe0d` |
 | **Meme Auction** | `b6da523079f466472686cc67c4c994467d4a40bb82c25ee2fd208ff1b99ffdc7` |
 | **Typing Arena** | `33dfe6536bdebd6cf285ed9e490a9031d27c98605edf7d79a8e16f09c4e3c646` |
+| **Arcade Nexus** | `28ebf71a6e3cebc45ce3b97ddf9d3e4f176e414711b5b83aee03583f695ff12b` |
 
 ### Contract Structure
 
@@ -261,7 +319,8 @@ contracts/
 ├── game_of_life/           # Conway's Game of Life
 ├── prediction_pulse/       # Betting/prediction market
 ├── meme_auction/           # NFT-style meme auctions
-└── typing_arena/           # Speed typing challenges
+├── typing_arena/           # Speed typing challenges
+└── arcade_nexus/           # Cross-game reputation & seasons
 ```
 
 ---
@@ -441,6 +500,96 @@ if (!localStorage.getItem(`bonus_claimed_${chainId}`)) {
 
 ---
 
+## 🧠 Arcade Nexus Contract
+
+### GraphQL Queries (Skill Oracle API)
+
+```graphql
+# Get all seasons
+query {
+  seasons {
+    id
+    title
+    description
+    startTime
+    endTime
+    theme
+    active
+  }
+}
+
+# Get player's season stats
+query {
+  playerSeasonStats(owner: "521da09bee...", seasonId: 0) {
+    totalXp
+    predictionScore
+    memeScore
+    typingScore
+    lifeScore
+    completedQuests
+    rankSnapshot
+  }
+}
+
+# Get leaderboard
+query {
+  leaderboard(seasonId: 0, limit: 50) {
+    owner
+    totalXp
+    completedQuests
+  }
+}
+
+# Get player's Arcade Skill Index
+query {
+  skillIndex(owner: "521da09bee...", seasonId: 0) {
+    totalXp
+    overallScore
+    rankHint
+  }
+}
+```
+
+### GraphQL Mutations
+
+```graphql
+# Create a new season (admin)
+mutation {
+  createSeason(
+    title: "Season 1 - Genesis",
+    description: "The first competitive season!",
+    startTime: 1733029620,
+    endTime: 1735621620,
+    theme: "Launch Season"
+  )
+}
+
+# Record XP from game action
+mutation {
+  recordGameAction(seasonId: 0, category: Prediction, points: 50)
+}
+
+# Create a quest
+mutation {
+  createQuest(
+    seasonId: 0,
+    title: "Arcade Master",
+    description: "Play all 4 games",
+    category: Mixed,
+    rewardXp: 200,
+    requirementsText: "Complete 1 game in each category",
+    aiSuggested: false
+  )
+}
+
+# Complete a quest
+mutation {
+  completeQuest(questId: 1)
+}
+```
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
@@ -518,17 +667,20 @@ linera publish-and-create \
 
 This project demonstrates:
 
-- ✅ **5 fully on-chain smart contracts**
+- ✅ **6 fully on-chain smart contracts**
+- ✅ **Arcade Nexus** - Cross-game reputation & seasons layer
 - ✅ **MetaMask wallet integration** with custom Signer
 - ✅ **Real-time blockchain queries** via GraphQL
 - ✅ **AI image generation** for meme creation
 - ✅ **40+ professional SVG icons**
 - ✅ **Real player stats** aggregation
+- ✅ **XP system with ranks** (Bronze → Legendary)
 - ✅ **Token bonus system**
 - ✅ **Conway's Game of Life** entirely on-chain
 - ✅ **Prediction market** with real betting pools
 - ✅ **NFT-style auctions** with bidding
 - ✅ **Speed typing challenges** with WPM tracking
+- ✅ **Season 1 - Genesis** launched and running
 
 ---
 

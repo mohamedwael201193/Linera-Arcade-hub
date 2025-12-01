@@ -2,8 +2,24 @@ import { motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useWallet } from '../contexts/WalletContext'
+import * as nexus from '../lib/arcadeNexus'
 import type { CellPosition, GridInfo, Pattern } from '../lib/gol'
 import * as gol from '../lib/gol'
+import { XP_VALUES } from '../lib/xpConfig'
+
+// Helper to record XP (silent failure)  
+async function recordLifeXP(xp: number) {
+  if (!nexus.isArcadeNexusConfigured()) return
+  try {
+    const seasons = await nexus.getActiveSeasons()
+    if (seasons.length > 0) {
+      await nexus.recordGameAction(seasons[0].id, 'LIFE', xp)
+      console.log('[GoL] Recorded', xp, 'XP')
+    }
+  } catch (err) {
+    console.log('[GoL] XP recording skipped:', err)
+  }
+}
 
 // Grid configuration - match contract dimensions
 const GRID_SIZE = gol.GRID_WIDTH
@@ -316,6 +332,9 @@ export function GameGol() {
       // Now load the pattern
       console.log('[GoL] Loading pattern:', selectedPattern)
       await gol.loadPattern(selectedPattern, 5, 5)
+      
+      // Record XP for loading a pattern
+      recordLifeXP(XP_VALUES.life.pattern)
       
       // Wait for chain to sync before fetching updated state
       console.log('[GoL] Pattern loaded, waiting for chain sync...')

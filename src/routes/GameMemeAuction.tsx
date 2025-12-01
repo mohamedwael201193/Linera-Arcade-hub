@@ -29,8 +29,24 @@ import {
 } from '../components/Icons'
 import { useWallet } from '../contexts/WalletContext'
 import { generateAIImage } from '../lib/aiImageGenerator'
+import * as nexus from '../lib/arcadeNexus'
 import type { Auction, AuctioneerStats, MemeRarity } from '../lib/memeAuction'
 import * as ma from '../lib/memeAuction'
+import { XP_VALUES } from '../lib/xpConfig'
+
+// Helper to record XP (silent failure)
+async function recordMemeXP(xp: number) {
+  if (!nexus.isArcadeNexusConfigured()) return
+  try {
+    const seasons = await nexus.getActiveSeasons()
+    if (seasons.length > 0) {
+      await nexus.recordGameAction(seasons[0].id, 'MEME', xp)
+      console.log('[MemeAuction] Recorded', xp, 'XP')
+    }
+  } catch (err) {
+    console.log('[MemeAuction] XP recording skipped:', err)
+  }
+}
 
 // Meme placeholder SVG as data URL
 const MEME_PLACEHOLDER = `data:image/svg+xml,${encodeURIComponent(`
@@ -237,6 +253,9 @@ export function GameMemeAuction() {
         endTime
       )
       
+      // Record XP for creating auction
+      recordMemeXP(XP_VALUES.meme.create)
+      
       setSuccess('Auction created successfully! Waiting for chain to sync...')
       setShowCreateForm(false)
       setNewTitle('')
@@ -278,6 +297,9 @@ export function GameMemeAuction() {
       
       await ma.placeBid(selectedAuction.id, bidAmount)
       
+      // Record XP for bidding
+      recordMemeXP(XP_VALUES.meme.bid)
+      
       setSuccess('Bid placed successfully!')
       setSelectedAuction(null)
       setBidAmount('')
@@ -310,6 +332,10 @@ export function GameMemeAuction() {
     try {
       setSigningAction('Claim meme')
       await ma.claimMeme(auctionId)
+      
+      // Record XP for winning auction
+      recordMemeXP(XP_VALUES.meme.win)
+      
       setSuccess('Meme claimed! Check your collection.')
       setTimeout(() => loadData(), 3000)
     } catch (err) {
