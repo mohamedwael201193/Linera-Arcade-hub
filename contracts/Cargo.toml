@@ -10,6 +10,10 @@ members = [
     "meme_auction",
     "typing_arena",
     "arcade_nexus",
+    "meme_battle",
+    "arcade_token",
+    "markets_hub",
+    "market_engine",
 ]
 
 [workspace.package]

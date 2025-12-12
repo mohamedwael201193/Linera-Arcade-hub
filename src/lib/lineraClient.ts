@@ -78,10 +78,16 @@ export interface LineraProvider {
 // Environment configuration
 const FAUCET_URL = 'https://faucet.testnet-conway.linera.net'
 
+// Use proxy in development to avoid CORS issues
+const isDevelopment = import.meta.env.DEV
+const VALIDATOR_URL = isDevelopment 
+  ? '/api/linera'  // Proxied through Vite dev server
+  : 'https://validator-1.testnet-conway.linera.net'
+
 export const config = {
   network: import.meta.env.VITE_LINERA_NETWORK || 'conway',
   faucetUrl: import.meta.env.VITE_LINERA_FAUCET_URL || FAUCET_URL,
-  validatorUrl: import.meta.env.VITE_LINERA_VALIDATOR_URL || 'https://validator-1.testnet-conway.linera.net',
+  validatorUrl: import.meta.env.VITE_LINERA_VALIDATOR_URL || VALIDATOR_URL,
 }
 
 // Storage keys

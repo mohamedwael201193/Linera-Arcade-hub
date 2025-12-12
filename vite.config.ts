@@ -27,6 +27,7 @@ export default defineConfig({
       'VITE_PLAYER_PROFILE_APP_ID',
       'VITE_GOL_APP_ID',
       'VITE_PREDICTION_PULSE_APP_ID',
+      'VITE_MEME_BATTLE_APP_ID',
     ]),
   ],
   server: {
@@ -41,6 +42,15 @@ export default defineConfig({
       allow: [
         path.resolve(__dirname, '.'),
       ],
+    },
+    proxy: {
+      // Proxy Linera validator requests to avoid CORS in development
+      '/api/linera': {
+        target: 'https://validator-1.testnet-conway.linera.net',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/linera/, ''),
+        secure: true,
+      },
     },
   },
   preview: {

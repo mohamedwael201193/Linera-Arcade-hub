@@ -114,15 +114,8 @@ function handleGraphQLErrors(result: { errors?: Array<{ message: string }> }): v
 
 // Convert JS category to GraphQL enum (contract uses Prediction, Meme, Typing, Life, Mixed, Other)
 function categoryToGraphQL(category: GameCategory | QuestCategory): string {
-  const mapping: Record<string, string> = {
-    'PREDICTION': 'Prediction',
-    'MEME': 'Meme',
-    'TYPING': 'Typing',
-    'LIFE': 'Life',
-    'MIXED': 'Mixed',
-    'OTHER': 'Other',
-  }
-  return mapping[category] || 'Other'
+  // async_graphql::Enum uses SCREAMING_CASE by default
+  return category // Already in correct format (MEME, PREDICTION, etc.)
 }
 
 // ==================== Queries ====================

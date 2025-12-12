@@ -3,6 +3,7 @@ import { Layout } from './components/Layout/Layout'
 import { WalletProvider } from './contexts/WalletContext'
 import { GameGol } from './routes/GameGol'
 import { GameMemeAuction } from './routes/GameMemeAuction'
+import GameMemeBattle from './routes/GameMemeBattle'
 import { GamePredictionPulse } from './routes/GamePredictionPulse'
 import { GameTypingArena } from './routes/GameTypingArena'
 import { Games } from './routes/Games'
@@ -21,6 +22,7 @@ function App() {
             <Route path="/games/gol" element={<GameGol />} />
             <Route path="/games/prediction-pulse" element={<GamePredictionPulse />} />
             <Route path="/games/meme-auction" element={<GameMemeAuction />} />
+            <Route path="/games/meme-battle" element={<GameMemeBattle />} />
             <Route path="/games/typing-arena" element={<GameTypingArena />} />
             <Route path="/seasons" element={<SeasonsAndQuests />} />
             <Route path="/profile" element={<Profile />} />

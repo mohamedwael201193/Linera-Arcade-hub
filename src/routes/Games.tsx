@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRightIcon, ChartIcon, DnaIcon, ImageIcon, KeyboardIcon, RocketIcon } from '../components/Icons'
+import { ArrowRightIcon, ChartIcon, DnaIcon, ImageIcon, KeyboardIcon, RocketIcon, TrophyIcon } from '../components/Icons'
 
 interface Game {
   id: string
@@ -58,6 +58,17 @@ const games: Game[] = [
     path: '/games/meme-auction',
     available: true,
     category: 'Trading',
+  },
+  {
+    id: 'meme-battle',
+    title: 'Meme Battle Royale',
+    description: 'Vote in epic tournament-style meme battles! Single-elimination brackets with real-time voting.',
+    icon: TrophyIcon,
+    iconColor: 'text-yellow-400',
+    difficulty: 'Easy',
+    path: '/games/meme-battle',
+    available: true,
+    category: 'Competitive',
   },
 ]
 

@@ -1,0 +1,24 @@
+[package]
+name = "meme_battle"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-graphql = "7.0.11"
+linera-sdk = { version = "0.15.6" }
+serde = { version = "1.0.217", features = ["derive"] }
+thiserror = "2.0.9"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "meme_battle_contract"
+path = "src/contract.rs"
+
+[[bin]]
+name = "meme_battle_service"
+path = "src/service.rs"
+
+[dev-dependencies]
+linera-sdk = { version = "0.15.6", features = ["test"] }
